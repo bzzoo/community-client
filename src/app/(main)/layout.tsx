@@ -7,8 +7,10 @@ export const metadata = {
 
 export default function RootLayout({
   children,
+  modal,
 }: {
   children: React.ReactNode;
+  modal: React.ReactNode;
 }) {
   return (
     <div className="flex flex-col w-full">
@@ -20,6 +22,7 @@ export default function RootLayout({
           {/* 사이드 섹션 */}
         </section>
       </main>
+      {modal}
     </div>
   );
 }
