@@ -1,4 +1,6 @@
 import Header from "@/components/Header";
+import MainContainer from "@/components/MainContainer";
+import SideContainer from "@/components/SideContainer";
 
 export const metadata = {
   title: "Next.js",
@@ -17,9 +19,8 @@ export default function RootLayout({
       <Header />
       <main className="mx-auto w-full max-w-5xl">
         <section className="relative flex gap-8">
-          {/* 메인 섹션 */}
-          {children}
-          {/* 사이드 섹션 */}
+          <MainContainer>{children}</MainContainer>
+          <SideContainer />
         </section>
       </main>
       {modal}
