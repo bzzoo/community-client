@@ -1,4 +1,5 @@
 import React from "react";
+import TextareaAutosize from "react-textarea-autosize";
 
 type Props = {
   value: string;
@@ -7,12 +8,11 @@ type Props = {
 
 const TitleInput = ({ value, onChange }: Props) => {
   return (
-    <textarea
-      id="title"
-      placeholder="제목을 입력해주세요"
-      className="w-full h-auto font-bold text-3xl line-clamp-3 border-gray-500/30 placeholder-gray-500/80 focus:border-gray-500 focus:outline-none focus:ring-0"
-      value={value}
-      onChange={onChange}
+    <TextareaAutosize
+      className="w-full h-auto font-bold text-3xl line-clamp-3 outline-none bg-neutral-100 flex-1 resize-none"
+      placeholder="제목을 입력하세요"
+      value={"안녕하세요"}
+      onChange={() => {}}
     />
   );
 };

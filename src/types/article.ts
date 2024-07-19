@@ -1,3 +1,5 @@
+import { MemberInfo } from "./member";
+
 export interface ArticlePageData {
   tatalElements: number;
   isLast: boolean;
@@ -30,4 +32,14 @@ export interface Keyword {
   keywordName: string;
 }
 
-export interface Comment {}
+export interface Comment {
+  articleId: number;
+  commentId: number;
+  parentId: number;
+  content: string;
+  author: MemberInfo;
+  childList: Comment[];
+  createdAt: Date;
+  updatedAt: Date;
+  isVote: Boolean;
+}
