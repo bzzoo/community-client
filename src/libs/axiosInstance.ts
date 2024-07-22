@@ -10,6 +10,8 @@ axiosInstance.interceptors.request.use(
     const token = cookies().get("mb_token")?.value;
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
+    } else {
+      config.headers.Authorization = `Bearer -1`;
     }
     return config;
   },
