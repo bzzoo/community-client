@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { Noto_Sans_KR } from "next/font/google";
 import "@/app/globals.css";
-
+import { AuthProvider } from "@/providers/AuthProvider";
+import { QueryProvider } from "@/providers/QueryProvider";
+import TabProvider from "@/providers/TabProvider";
 const notoSansKR = Noto_Sans_KR({ weight: ["500"], subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -17,7 +19,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${notoSansKR.className} bg-neutral-400/10 antialiased`}>
-        {children}
+        <AuthProvider>
+          <QueryProvider>
+            <TabProvider>{children}</TabProvider>
+          </QueryProvider>
+        </AuthProvider>
       </body>
     </html>
   );

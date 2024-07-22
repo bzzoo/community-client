@@ -1,19 +1,19 @@
-"use client";
 import React from "react";
-import ChatList from "../_components/ChatList";
-import dummyChatData from "@/actions/chat.action";
-import ChatRoom from "../_components/ChatRoom";
+import { HydrationBoundary } from "@tanstack/react-query";
+import { SocketProvider } from "@/providers/SocketProvider";
+import ChatListSuspense from "../_components/ChatListSuspense";
+import ChatScreenSuspense from "../_components/ChatScreenSuspense";
+import { prefetchChatList } from "../_libs/prefetchChatList";
 
 const Page = async () => {
-  const chatList = dummyChatData;
-  const chatId = chatList[0].chatId;
+  const { dehydratedState } = await prefetchChatList();
   return (
-    <div className="flex border-solid border-x h-full bg-white">
-      {Array.isArray(chatList) && (
-        <ChatList chatList={chatList} onRoomClick={() => {}} />
-      )}
-      <ChatRoom chatId={chatId} />
-    </div>
+    <HydrationBoundary state={dehydratedState}>
+      <SocketProvider>
+        <ChatListSuspense />
+        <ChatScreenSuspense />
+      </SocketProvider>
+    </HydrationBoundary>
   );
 };
 
