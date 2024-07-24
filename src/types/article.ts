@@ -22,7 +22,7 @@ export interface Article {
   upvoteCount: number | null;
   commentCount: number | null;
   keywordList: Keyword[];
-  authorInfo: {};
+  author: MemberInfo;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -33,12 +33,12 @@ export interface Keyword {
 }
 
 export interface Comment {
-  articleId: number;
-  commentId: number;
+  articleId: string;
+  commentId: string;
   parentId: number;
   content: string;
   author: MemberInfo;
-  childList: Comment[];
+  childCommentList: Comment[];
   createdAt: Date;
   updatedAt: Date;
   isVote: Boolean;
