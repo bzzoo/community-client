@@ -2,22 +2,21 @@
 
 import React from "react";
 import UserIcon from "../../../../components/UserIcon";
-import useArticleForm from "@/hooks/useArticleForm";
-import { handleReplySubmit } from "../../_actions/submit.action";
-import QuillEditor from "../../_components/QuillEditor";
+import Editor from "@/components/Editor";
+import useCommentForm from "@/hooks/useCommentForm";
+import { submit } from "@/actions/comment.action";
 
 const ReplyForm = ({
   articleId,
   parentId,
 }: {
-  articleId: number;
-  parentId: number;
+  articleId: string;
+  parentId: string;
 }) => {
-  const { formData, handleEditorChange } = useArticleForm({
-    title: "",
+  const { formData, handleEditorChange } = useCommentForm({
     content: "",
-    articleType: "",
-    keywordList: [],
+    targetId: parentId,
+    targetType: "COMMENT",
   });
 
   const hasContent = (htmlString: string) => {
@@ -25,13 +24,29 @@ const ReplyForm = ({
     return text.length > 0;
   };
 
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    if (!hasContent(formData.content)) {
+      alert("댓글을 입력해주세요.");
+      return;
+    }
+
+    try {
+      await submit(formData);
+      console.log("댓글이 성공적으로 제출되었습니다!");
+    } catch (error) {
+      console.error("댓글 제출 중 오류 발생:", error);
+    }
+  };
+
   return (
     <div className="border border-x-0 border-b-0 p-4">
-      <form onSubmit={() => handleReplySubmit(formData, articleId, parentId)}>
+      <form onSubmit={handleSubmit}>
         <div className="flex items-center gap-4 bg-neutral-400/10 rounded-2xl p-4">
           <UserIcon size={"md"} />
           <div className="flex-1 ">
-            <QuillEditor
+            <Editor
               onChange={handleEditorChange}
               readOnly={false}
               placeholder="댓글을 적어주세요"
