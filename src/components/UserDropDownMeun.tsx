@@ -1,10 +1,12 @@
 import Link from "next/link";
 import React from "react";
 import LogoutButton from "./LogoutButton";
+import { useAuth } from "@/providers/AuthProvider";
 
 const UserDropDownMeun = () => {
+  const { user } = useAuth();
   const profileMenu = [
-    { name: "내 프로필", href: `/` },
+    { name: "내 프로필", href: `/profiles/${user?.memberId}` },
     { name: "계정 관리", href: "/" },
     { name: "활동 내역", href: "/" },
   ];

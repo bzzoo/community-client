@@ -1,13 +1,10 @@
+"use client";
+
+import { useAuth } from "@/providers/AuthProvider";
 import { AfterAuthSection } from "./AfterAuthSection";
 import { BeforeAuthSection } from "./BeforeAuthSection";
 
 export const UserSection = () => {
-  return (
-    <>
-      <div className="hidden items-center gap-4 md:flex">
-        {/* <BeforeAuthSection /> */}
-        <AfterAuthSection />
-      </div>
-    </>
-  );
+  const { isLoggedIn } = useAuth();
+  return <>{isLoggedIn ? <AfterAuthSection /> : <BeforeAuthSection />}</>;
 };
