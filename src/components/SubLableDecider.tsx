@@ -22,7 +22,7 @@ const SubLabelDecider = ({ type }: TextLabelProps) => {
 
   const { text, color } = getTextAndColor(type);
 
-  return <span className={`font-sans font-semibold ${color}`}>{text}</span>;
+  return <span className={`font-semibold ${color}`}>{text}</span>;
 };
 
 export default SubLabelDecider;

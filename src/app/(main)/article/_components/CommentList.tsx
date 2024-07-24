@@ -1,44 +1,42 @@
-// "use client";
+"use client";
 
-// import getCommentList from "@/app/(main)/_lib/getCommentList";
-// import { CommentPageData } from "@/types";
-// import { InfiniteData, useInfiniteQuery } from "@tanstack/react-query";
-// import React, { Fragment } from "react";
-// import Comments from "./Comments";
-// type Props = {
-//   articleId: string;
-// };
-// const CommentList = ({ articleId }: Props) => {
-//   const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteQuery<
-//     CommentPageData,
-//     Object,
-//     InfiniteData<CommentPageData>,
-//     [_1: string, _2: string, _3: string]
-//   >({
-//     queryKey: ["articles", articleId, "comments"],
-//     queryFn: getCommentList,
-//     initialPageParam: -1,
-//     getNextPageParam: (lastPage) => {
-//       lastPage.isLast ? null : lastPage.nextCursor;
-//     },
-//     staleTime: 60 * 1000,
-//     gcTime: 300 * 1000,
-//   });
+import { InfiniteData, useInfiniteQuery } from "@tanstack/react-query";
+import React from "react";
+import CommentItem from "./CommentItem";
+import { CommentPageData, Comment as IComment } from "@/types/article";
+import { getCommentList } from "@/actions/article.actions";
 
-//   return (
-//     <div>
-//       {data?.pages.map((page, i) => (
-//         <Fragment key={i}>
-//           {page.content?.map((comment, commentId) => (
-//             <Comments key={commentId} comment={comment} />
-//           ))}
-//         </Fragment>
-//       ))}
-//       {hasNextPage && (
-//         <button onClick={() => fetchNextPage()}>Load more</button>
-//       )}
-//     </div>
-//   );
-// };
+const CommentList = ({ articleId }: { articleId: string }) => {
+  const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteQuery<
+    CommentPageData,
+    Error,
+    InfiniteData<IComment[]>,
+    [_1: string, _2: string],
+    number
+  >({
+    queryKey: ["comments", articleId],
+    queryFn: ({ pageParam }) =>
+      getCommentList({ articleId, cursor: pageParam }),
+    getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
+    initialPageParam: -1,
+    select: (data) => ({
+      pages: data.pages.map((page) => page.content),
+      pageParams: data.pageParams,
+    }),
+  });
 
-// export default CommentList;
+  const commentList = data?.pages.flat() ?? [];
+  console.log(data);
+  return (
+    <>
+      {commentList?.map((comment, index) => (
+        <CommentItem key={index} comment={comment} />
+      ))}
+      {hasNextPage && (
+        <button onClick={() => fetchNextPage()}>Load more</button>
+      )}
+    </>
+  );
+};
+
+export default CommentList;

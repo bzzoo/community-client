@@ -1,7 +1,6 @@
 "use server";
 
 import axiosInstance from "@/libs/axiosInstance";
-import axiosInstanceWithoutHeaders from "@/libs/axiosInstanceWithoutHeaders ";
 import { Article, ArticlePageData, CommentPageData } from "@/types/article";
 
 export const getArticleList = async (): Promise<ArticlePageData> => {

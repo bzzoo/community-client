@@ -1,46 +1,66 @@
-import LikeButton from "../../_components/LikeButton";
-import QuillEditor from "@/app/_components/editor/QuillEditor";
-import ContentUserInfo from "../../_components/ContentUserInfo";
-import UserIcon from "@/app/_components/UserIcon";
-import { IoEllipsisVerticalSharp } from "react-icons/io5";
-import { Comment as IComment } from "@/types";
+"use client";
 
-const CommentItem = ({
-  comment,
-  isReply = false,
-}: {
-  comment: IComment;
-  isReply?: boolean;
-}) => (
-  <>
-    <div className={`p-4 flex flex-col gap-3 ${isReply ? "ml-12" : ""}`}>
-      <div className="flex items-center gap-4">
-        <UserIcon size={isReply ? "lg" : "md"} />
-        <ContentUserInfo
-          author={comment.author}
-          createdAt={comment.createdAt}
-          type="question"
-        />
-        <IoEllipsisVerticalSharp size={18} color="gray" />
-      </div>
-      <div
-        className={`flex flex-col gap-4 ${
-          !isReply ? "" : "bg-neutral-400/10 p-4 rounded-md"
-        }`}
-      >
-        <QuillEditor
+import React, { useState } from "react";
+import { Comment as IComment } from "@/types/article";
+import UserIcon from "../../../../components/UserIcon";
+import { IoEllipsisVerticalSharp } from "react-icons/io5";
+import { BsChatSquareDots } from "react-icons/bs";
+import ReplyForm from "@/app/(main)/article/_components/ReplyForm";
+import LikeButton from "@/components/LikeButton";
+import ContentUserInfo from "@/components/ContentUserInfo";
+import Editor from "@/components/Editor";
+import ReplyList from "./ReplyList";
+
+const CommentItem = ({ comment }: { comment: IComment }) => {
+  const [replyClick, setReplyClick] = useState(false);
+
+  if (!comment) {
+    return null;
+  }
+  return (
+    <section className="border bg-white rounded-2xl ">
+      <div className="flex flex-col gap-6 px-4 py-4">
+        <div className="flex items-center gap-3 ">
+          <UserIcon size={"md"} />
+          <ContentUserInfo
+            author={comment.author}
+            createdAt={comment.createdAt}
+            type={"reply"}
+          />
+          <IoEllipsisVerticalSharp size={18} color="gray" />
+        </div>
+        <Editor
           onChange={() => {}}
           readOnly={true}
           placeholder=""
           value={comment.content}
           comment={true}
         />
-        <div className="flex justify-end">
+        <div className="flex gap-4">
           <LikeButton />
+          <button
+            onClick={() => {
+              setReplyClick(!replyClick);
+            }}
+            className="flex items-center gap-2"
+          >
+            <BsChatSquareDots />
+            <span className="text-sm text-gray-500">
+              댓글
+              {comment.childCommentList ? comment.childCommentList.length : 0}
+            </span>
+          </button>
         </div>
       </div>
-    </div>
-  </>
-);
 
+      {replyClick && (
+        <ReplyForm articleId={comment.articleId} parentId={comment.commentId} />
+      )}
+
+      {comment.childCommentList && (
+        <ReplyList replyList={comment.childCommentList} />
+      )}
+    </section>
+  );
+};
 export default CommentItem;
