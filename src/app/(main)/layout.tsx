@@ -18,7 +18,7 @@ export default function RootLayout({
     <div className="flex flex-col w-full">
       <Header />
       <main className="mx-auto w-full max-w-5xl">
-        <section className="relative flex gap-8">
+        <section className="relative flex gap-8 p-6">
           <MainContainer>{children}</MainContainer>
           <SideContainer />
         </section>
