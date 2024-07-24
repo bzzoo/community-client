@@ -73,8 +73,8 @@
   color: inherit !important;
 }
 
-.quill > .ql-container {
-  font-size: 0.95rem;
+.ql-container {
+  font-size: 14px !important;
   font-weight: 400;
 }
 
@@ -97,7 +97,6 @@
 
 .quill > .ql-container > .ql-editor.ql-blank::before {
   left: 0;
-  font-size: 1rem;
   color: gray;
 }
 
