@@ -72,7 +72,7 @@ const KeywordInput = ({ onSubmit, fakeKeywords }: Props) => {
           >
             "{input}"
             <span className="text-[0.7rem] font-bold text-gray-500">
-              직접 입력
+              {"직접 입력"}
             </span>
           </li>
 

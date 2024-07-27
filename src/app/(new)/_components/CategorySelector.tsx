@@ -1,24 +1,17 @@
+"use client";
+
 import React from "react";
 import CategoryDropdown from "@/app/(new)/_components/CategoryDropdown";
 import { RiArrowDropDownLine } from "react-icons/ri";
 import { useToggle } from "../../../hooks/useToggle";
 
-interface Option {
-  label: string;
-  value: string;
-}
-
-const categoryOptions: Option[] = [
-  { label: "질문", value: "QUESTION" },
-  { label: "공유", value: "SHARE" },
-];
-
-interface Props {
+const CategorySelector = ({
+  category,
+  onSelect,
+}: {
   category: string;
-  onCategoryChange: (category: string) => void;
-}
-
-const CategorySelector = ({ category, onCategoryChange }: Props) => {
+  onSelect: (category: string) => void;
+}) => {
   const { show, toggle } = useToggle();
 
   return (
@@ -29,19 +22,17 @@ const CategorySelector = ({ category, onCategoryChange }: Props) => {
           className="p-3 w-full focus:outline-0 flex items-center justify-between"
           onClick={toggle}
         >
-          <span className="text-base font-bold">{category}</span>
+          <span className="text-base font-bold">
+            {category === "SHARE"
+              ? "공유"
+              : category === "QUESTION"
+              ? "질문"
+              : category}
+          </span>
           <RiArrowDropDownLine />
         </button>
 
-        {show && (
-          <CategoryDropdown
-            options={categoryOptions}
-            onSelect={(item) => {
-              onCategoryChange(item);
-              toggle();
-            }}
-          />
-        )}
+        {show && <CategoryDropdown onSelect={onSelect} toggle={toggle} />}
       </div>
     </div>
   );

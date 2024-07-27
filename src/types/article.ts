@@ -43,3 +43,10 @@ export interface Comment {
   updatedAt: Date;
   isVote: Boolean;
 }
+
+export interface ArticleFormData {
+  title: string;
+  content: string;
+  articleType: string;
+  keywordList: string[];
+}

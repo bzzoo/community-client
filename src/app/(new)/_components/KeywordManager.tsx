@@ -18,7 +18,6 @@ interface Props {
   onKeywordsChange: (keywords: string[]) => void;
 }
 const KeywordManager = ({ selectedKeywords, onKeywordsChange }: Props) => {
-  console.log(selectedKeywords);
   const addKeyword = (newKeyword: string) => {
     if (
       !selectedKeywords.includes(newKeyword.trim()) &&

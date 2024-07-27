@@ -1,53 +1,40 @@
 "use client";
 
-import { useMemo, useState, useEffect } from "react";
-import QuillWrapper from "./QuillWrapper";
+import React, { useMemo, useState, useEffect } from "react";
+import DynamicQuillWrapper from "./QuillWrapper";
 
 const TEXT_NODE = 3;
 
-type Props = {
+type EditorProps = {
   placeholder: string;
   onChange: (content: string | null) => void;
   readOnly: boolean;
-  value: string | "";
+  value: string;
   comment: boolean;
 };
 
-const Editor = ({
+const Editor: React.FC<EditorProps> = ({
   onChange,
   placeholder,
   readOnly,
   value,
   comment = false,
-}: Props) => {
+}) => {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  const modules = useMemo(() => {
-    if (readOnly) {
-      return {
-        toolbar: false,
-        clipboard: {
-          matchVisual: false,
-        },
-      };
-    }
-    return {
-      toolbar: {
-        container: comment ? "#comment_toolbar" : "#toolbar",
-      },
+  const modules = useMemo(
+    () => ({
+      toolbar: readOnly
+        ? false
+        : { container: comment ? "#comment_toolbar" : "#toolbar" },
       clipboard: {
         matchVisual: false,
         matchers: [
-          [
-            "a",
-            (delta: any) => {
-              return delta;
-            },
-          ],
+          ["a", (delta: any) => delta],
           [
             TEXT_NODE,
             (node: any, delta: any) => {
@@ -55,17 +42,19 @@ const Editor = ({
               if (typeof node.data === "string") {
                 const matches = node.data.match(urlRegex);
                 if (matches) {
-                  const ops = [];
-                  let str = node.data;
-                  matches.forEach((match: any) => {
-                    const split = str.split(match);
-                    const beforeLink = split.shift();
-                    ops.push({ insert: beforeLink });
-                    ops.push({ insert: match, attributes: { link: match } });
-                    str = split.join(match);
-                  });
-                  ops.push({ insert: str });
-                  return { ops: ops };
+                  return {
+                    ops: node.data
+                      .split(urlRegex)
+                      .reduce((acc: any[], text: string, i: number) => {
+                        if (i > 0)
+                          acc.push({
+                            insert: matches[i - 1],
+                            attributes: { link: matches[i - 1] },
+                          });
+                        if (text) acc.push({ insert: text });
+                        return acc;
+                      }, []),
+                  };
                 }
               }
               return delta;
@@ -73,17 +62,16 @@ const Editor = ({
           ],
         ],
       },
-    };
-  }, [comment, readOnly, value]);
+    }),
+    [comment, readOnly]
+  );
 
-  if (!mounted) {
-    return null;
-  }
+  if (!mounted) return null;
 
   return (
     <div>
       {typeof window !== "undefined" && (
-        <QuillWrapper
+        <DynamicQuillWrapper
           modules={modules}
           readOnly={readOnly}
           placeholder={placeholder}

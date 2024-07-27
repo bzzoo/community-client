@@ -7,8 +7,13 @@ export interface FormData {
   keywordList: string[];
 }
 
-export default function useArticleForm(initialData: FormData) {
-  const [formData, setFormData] = useState<FormData>(initialData);
+export default function useArticleForm() {
+  const [formData, setFormData] = useState<FormData>({
+    title: "",
+    content: "",
+    articleType: "QUESTION",
+    keywordList: [],
+  });
 
   const handleTitleChange = (
     event: React.ChangeEvent<HTMLTextAreaElement>

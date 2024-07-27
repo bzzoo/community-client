@@ -1,3 +1,5 @@
+"use client";
+
 import React, {
   useEffect,
   useRef,
@@ -51,7 +53,7 @@ const QuillWrapper = forwardRef<any, QuillWrapperProps>(
       };
 
       loadQuill();
-    }, [value, onChange, readOnly, placeholder, modules]);
+    }, []);
 
     return <div ref={quillRef} />;
   }

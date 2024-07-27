@@ -1,23 +1,30 @@
 import React from "react";
 
-interface CategoryOption {
+interface Option {
   label: string;
   value: string;
 }
+
+const categoryOptions: Option[] = [
+  { label: "질문", value: "QUESTION" },
+  { label: "공유", value: "SHARE" },
+];
+
 interface Props {
-  options: CategoryOption[];
   onSelect: (category: string) => void;
+  toggle: () => void;
 }
 
-const CategoryDropdown = ({ options, onSelect }: Props) => {
+const CategoryDropdown = ({ onSelect, toggle }: Props) => {
   return (
     <div className="absolute top-full left-0 right-0 bg-white border border-solid z-10">
-      {options.map((option, index) => (
+      {categoryOptions.map((option) => (
         <div
           key={option.value}
           className="p-3 cursor-pointer"
           onClick={() => {
-            onSelect(option.label);
+            onSelect(option.value);
+            toggle();
           }}
         >
           {option.label}

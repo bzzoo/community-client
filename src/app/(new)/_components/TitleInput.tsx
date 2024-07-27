@@ -9,10 +9,10 @@ type Props = {
 const TitleInput = ({ value, onChange }: Props) => {
   return (
     <TextareaAutosize
-      className="w-full h-auto font-bold text-3xl line-clamp-3 outline-none bg-neutral-100 flex-1 resize-none"
+      className="w-full h-auto font-bold text-3xl line-clamp-3 outline-none flex-1 resize-none"
       placeholder="제목을 입력하세요"
-      value={"안녕하세요"}
-      onChange={() => {}}
+      value={value}
+      onChange={onChange}
     />
   );
 };
