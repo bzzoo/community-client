@@ -8,7 +8,7 @@ import {
   DotFilledIcon,
 } from "@radix-ui/react-icons"
 
-import { cn } from "@/shared/lib/tail-wind-merge"
+import { cn } from "@/shared/lib/utils/tail-wind-merge"
 
 const DropdownMenu = DropdownMenuPrimitive.Root
 
