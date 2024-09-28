@@ -8,11 +8,13 @@ const config: Config = {
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/features/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/shared/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/widgets/**/*.{js,ts,jsx,tsx,mdx}",
 
   ],
   theme: {
   	extend: {
   		colors: {
+				defaultGray: '#f2f4f6',
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
   			card: {
