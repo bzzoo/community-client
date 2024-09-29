@@ -1,0 +1,1 @@
+export { DynamicQuillWrapper as QuillWrapper} from './quill-wrapper'

@@ -1,0 +1,1 @@
+export {cn} from './tail-wind-merge'
