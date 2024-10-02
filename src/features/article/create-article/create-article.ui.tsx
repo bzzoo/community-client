@@ -16,26 +16,57 @@ import { Input } from '@/shared/ui/input'
 import { Button } from '@/shared/ui/button'
 import { CreateArticleSchema, CreateArticle } from './create-article.contracts'
 import { QuillWrapper } from '@/shared/lib/quill'
+import { useCreateArticleMutation } from './create-article.mutation'
+import { useRouter } from 'next/navigation'
+import {
+  transCreateArticleToArticle,
+  transCreateArticleToCreateArticleDto,
+} from '@/features/article/create-article/create-artice.lib'
 
 export const CreateArticleForm = () => {
-  const { handleSubmit, setValue, watch } = useForm<CreateArticle>({
+  const router = useRouter()
+  const {
+    handleSubmit,
+    setValue,
+    setError,
+    watch,
+    formState: { errors, isDirty, isValid },
+  } = useForm<CreateArticle>({
     mode: 'onTouched',
     resolver: zodResolver(CreateArticleSchema),
     defaultValues: { title: '', body: '', keywords: [], type: 'QUESTION' },
   })
 
+  const { mutate, isPending } = useCreateArticleMutation({
+    onMutate: () => {
+      //TODO 대기 스피너
+    },
+
+    onSuccess: (response) => {
+      const id = response!!
+      router.push(`/articles/${id}`)
+    },
+
+    onError: (error) => {
+      setError('root', { message: error.message })
+    },
+
+    onSettled: () => {
+      //TODO 대기 스피너
+    },
+  })
+
   const formData = watch()
-  const onSubmit = (data: CreateArticle) => {
-    console.log(data)
+  const canSubmit = [isDirty, isValid, !isPending].every(Boolean)
+  const onSubmit = (createArticle: CreateArticle) => {
+    const article = transCreateArticleToArticle({ createArticle })
+    mutate(article)
   }
-  const onError = (errors: any) => {
-    console.error('Validation Errors:', errors);
-  };
 
   return (
     <form
       className="flex flex-col items-center gap-8"
-      onSubmit={handleSubmit(onSubmit, onError)}
+      onSubmit={handleSubmit(onSubmit)}
     >
       <ArticleArticleFormHeader />
 

@@ -1,15 +1,42 @@
+import { z } from 'zod'
 import { AxiosContracts, axiosInstance } from '@/shared/lib/axios'
-import { CursorResultSchema, ApiResponseSchema } from '@/shared/api/common/response.contracts'
-import { ArticleDtoSchema, ArticlesDtoSchema } from '@/shared/api/article/article.contracts'
+import {
+  ArticleDtoSchema,
+  ArticlesDtoSchema,
+  CreateArticleDtoSchema,
+} from './article.contracts'
+import { ArticlesParamsDto, CreateArticleDto } from './article.types'
 
 export class ArticleService {
-  static getArticles(config: {}) {
+  static getArticle(id: string) {
+    return axiosInstance
+      .get(`/articles/${id}`)
+      .then(AxiosContracts.responseContract(ArticleDtoSchema))
+  }
 
-    const cursorResultSchema = CursorResultSchema(ArticlesDtoSchema);
-    const apiResponseSchema = ApiResponseSchema(cursorResultSchema);
-
+  static getArticles(config: { params: ArticlesParamsDto }) {
     return axiosInstance
       .get('/articles', config)
-      .then(AxiosContracts.responseContract(apiResponseSchema))
+      .then(AxiosContracts.pageResponseContract(ArticlesDtoSchema))
+  }
+
+  static createArticleMutation(data: { createArticleDto: CreateArticleDto }) {
+    const createArticleDto = AxiosContracts.requestContract(
+      CreateArticleDtoSchema,
+      data.createArticleDto,
+    )
+    return axiosInstance
+      .post('/articles', { createArticleDto })
+      .then(AxiosContracts.responseContract(z.null()))
+  }
+
+  static deleteArticleMutation(id: string) {
+    return axiosInstance.put(`/articles/${id}`)
+  }
+
+  static updateArticleMutation(id: number) {
+    return axiosInstance
+      .post(`/articles/${id}`)
+      .then(AxiosContracts.responseContract(ArticleDtoSchema))
   }
 }

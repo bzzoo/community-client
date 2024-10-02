@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from 'zod'
 
 const ArticleSummaryResponse = z.object({
   id: z.number(),
@@ -16,37 +16,46 @@ const ArticleSummaryResponse = z.object({
   }),
   keywords: z.array(
     z.object({
-      id: z.number().nullable(),
-      name: z.string().nullable(),
-    })
+      id: z.number(),
+      name: z.string(),
+    }),
   ),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
   viewCount: z.number(),
   commentCount: z.number(),
   upvoteCount: z.number(),
-});
+})
 
-export const ArticleDtoSchema = z.object({
-  article: ArticleSummaryResponse,
-});
+export const ArticleDtoSchema = ArticleSummaryResponse
 
-export const ArticlesDtoSchema = z.array(ArticleSummaryResponse);
+export const ArticlesDtoSchema = z.array(ArticleSummaryResponse)
 
 export const PageParamsDtoSchema = z.object({
-  cursor: z.string(),
-  size: z.string(),
-  type: z.string(),
-});
+  cr: z.string(),
+  sz: z.string(),
+  tp: z.string(),
+})
+
+export const FilterParamDtoSchema = z.object({
+  tag: z.string().optional(),
+  author: z.string().optional(),
+  pop: z.boolean().optional(),
+})
+
+export const ArticlesParamsDtoSchema = z.intersection(
+  PageParamsDtoSchema,
+  FilterParamDtoSchema,
+)
 
 export const CreateArticleDtoSchema = z.object({
   title: z.string(),
   body: z.string(),
-  keywords: z.optional(z.string().array()),
-});
+  keywords: z.array(z.string()).max(5).default([]),
+})
 
 export const UpdateArticleDtoSchema = z.object({
   title: z.string(),
   body: z.string(),
-  keywords: z.optional(z.string().array()),
-});
+  keywords: z.array(z.string()).max(5).default([]),
+})
