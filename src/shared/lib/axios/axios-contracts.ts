@@ -1,12 +1,17 @@
 import { AxiosHeaders, AxiosResponse } from 'axios'
 import { z, ZodType, ZodTypeAny } from 'zod'
 import { AxiosValidationError } from './axios-validator-error'
-import { CursorResultType, PaginatedApiResponseSchema } from '@/shared/api/common/response.contracts'
+import {
+  ApiResponseSchema,
+  CursorResultType,
+  PaginatedApiResponseSchema,
+} from '@/shared/api/common/response.contracts'
 
 export class AxiosContracts {
   static responseContract<Data>(schema: ZodType<Data>) {
     return (response: AxiosResponse<unknown>): Data => {
-      const validation = schema.safeParse(response.data)
+      const apiSchema = ApiResponseSchema(schema)
+      const validation = apiSchema.safeParse(response.data)
 
       if (!validation.success) {
         throw new AxiosValidationError(
@@ -17,17 +22,15 @@ export class AxiosContracts {
         )
       }
 
-      return validation.data as Data
+      return validation.data.data as Data
     }
   }
 
   static pageResponseContract<Data extends ZodTypeAny>(schema: Data) {
-    return (
-      response: AxiosResponse<unknown>,
-    ): CursorResultType<Data> => {
-      const pagedSchema = PaginatedApiResponseSchema(z.array(schema));
+    return (response: AxiosResponse<unknown>): CursorResultType<Data> => {
+      const pagedSchema = PaginatedApiResponseSchema(schema);
       const validation = pagedSchema.safeParse(response.data)
-
+      console.log(response.data)
       if (!validation.success) {
         throw new AxiosValidationError(
           response.config,
@@ -36,8 +39,8 @@ export class AxiosContracts {
           validation.error.errors,
         )
       }
-
-      return validation.data.data as CursorResultType<Data>
+      // @ts-ignore
+      return response.data.data as CursorResultType<Data>
     }
   }
 
