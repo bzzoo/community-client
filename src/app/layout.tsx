@@ -15,9 +15,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <QueryClientProvider>
-        <body className={cn('antialiased')}>{children}</body>
-      </QueryClientProvider>
+      <body className={cn('antialiased')}>
+        <QueryClientProvider>{children}</QueryClientProvider>
+      </body>
     </html>
   )
 }

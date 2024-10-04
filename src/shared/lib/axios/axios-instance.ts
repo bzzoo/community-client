@@ -1,10 +1,29 @@
-import axios, { AxiosError } from 'axios'
 import { z } from 'zod'
+import axios, { AxiosError } from 'axios'
 
 export const axiosInstance = axios.create({
   /** FIXME: .evn */
   baseURL: 'http://localhost:8080/api',
+  withCredentials: true,
 })
+
+axiosInstance.interceptors.request.use(
+  (config) => {
+    return config
+  },
+  (error) => Promise.reject(error),
+)
+
+axiosInstance.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (!axios.isAxiosError(error)) {
+      return Promise.reject(error)
+    }
+
+    return Promise.reject(handleGenericError(error))
+  },
+)
 
 export function handleGenericError(error: AxiosError) {
   /**

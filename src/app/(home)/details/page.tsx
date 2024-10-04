@@ -1,3 +1,3 @@
 export default function page() {
-  return <div>sides</div>
+  return <div>details-page</div>
 }
