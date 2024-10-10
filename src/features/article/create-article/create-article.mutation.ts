@@ -48,7 +48,6 @@ export function useCreateArticleMutation(
       const id = response!!
       const articleDetail = await ArticleService.getArticle(id)
       const article = transArticleDtoToArticle(articleDetail)
-
       queryClient.setQueryData(
         ArticleQueries.articleQuery(id).queryKey,
         article,

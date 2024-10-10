@@ -15,7 +15,7 @@ import { Badge } from '@/shared/ui/badge'
 import { Input } from '@/shared/ui/input'
 import { Button } from '@/shared/ui/button'
 import { CreateArticleSchema, CreateArticle } from './create-article.contracts'
-import { QuillWrapper } from '@/shared/lib/quill'
+import { CreateArticleEditor } from '@/shared/lib/quill'
 import { useCreateArticleMutation } from './create-article.mutation'
 import { useRouter } from 'next/navigation'
 import {
@@ -44,7 +44,7 @@ export const CreateArticleForm = () => {
 
     onSuccess: (response) => {
       const id = response!!
-      router.push(`/articles/${id}`)
+      router.push(`/details/${id}`)
     },
 
     onError: (error) => {
@@ -209,30 +209,5 @@ function CreateArticleToolbar() {
       <button className="ql-list hover:bg-blue-500" value="bullet" />
       <button className="ql-image hover:bg-blue-500 hover:text-white" />
     </div>
-  )
-}
-
-type CreateArticleEditorProps = {
-  setValue: UseFormSetValue<CreateArticle>
-  watch: UseFormWatch<CreateArticle>
-}
-
-export function CreateArticleEditor({
-  setValue,
-  watch,
-}: CreateArticleEditorProps) {
-  const content = watch('body')
-  const modules = {
-    toolbar: { container: '#toolbar' },
-  }
-
-  return (
-    <QuillWrapper
-      modules={modules}
-      readOnly={false}
-      placeholder="내용을 10자 이상 적어주세요"
-      value={content}
-      onChange={(content) => setValue('body', content)}
-    />
   )
 }

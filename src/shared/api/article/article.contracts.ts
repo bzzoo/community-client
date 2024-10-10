@@ -51,11 +51,12 @@ export const ArticlesParamsDtoSchema = z.intersection(
 export const CreateArticleDtoSchema = z.object({
   title: z.string(),
   body: z.string(),
+  type: z.string(),
   keywords: z.array(z.string()).max(5).default([]),
 })
 
 export const UpdateArticleDtoSchema = z.object({
   title: z.string(),
   body: z.string(),
-  keywords: z.array(z.string()).max(5).default([]),
+  keywords: z.array(z.string()).max(5).nullable().default([]),
 })
