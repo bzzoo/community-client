@@ -11,7 +11,7 @@ export const CursorResultSchema = <T extends z.ZodTypeAny>(itemSchema: T) =>
 export const ApiResponseSchema = <T extends z.ZodTypeAny>(dataSchema: T) =>
   z.object({
     result: z.string(),
-    data: z.union([dataSchema, z.null()]),
+    data: z.union([z.number(), dataSchema, z.null()]),
     error: z.object({
       message: z.string(),
     }).optional(),

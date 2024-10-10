@@ -91,6 +91,14 @@
     width: 36px !important;
 }
 
+.ql-snow .ql-stroke {
+    stroke: darkgray !important;
+}
+
+.ql-snow .ql-fill {
+    fill: darkgray !important;
+}
+
 .ql-editor::before {
     font-style: inherit !important;
     font-weight: bold !important;
@@ -98,6 +106,9 @@
 
 .ql-container.ql-snow {
     border: none !important;
+    background-color: #f2f4f6 !important;
+    border-radius: 12px !important;
+    display: inline-block !important;
 }
 
 .quill > .ql-container > .ql-editor {

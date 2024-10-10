@@ -8,6 +8,7 @@ export function transCreateArticleToCreateArticleDto(
   return {
     title: article.contents.title,
     body: article.contents.body,
+    type: article.type,
     keywords: article.keywords.map((keyword) => keyword.name)
   }
 }

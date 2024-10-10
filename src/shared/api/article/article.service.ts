@@ -1,11 +1,11 @@
 import { z } from 'zod'
-import { AxiosContracts, axiosInstance } from '@/shared/lib/axios'
 import {
   ArticleDtoSchema,
   ArticlesDtoSchema,
   CreateArticleDtoSchema,
 } from './article.contracts'
-import { ArticlesParamsDto, CreateArticleDto } from './article.types'
+import { articleTypesDto } from '@/shared/api/article'
+import { AxiosContracts, axiosInstance } from '@/shared/lib/axios'
 
 export class ArticleService {
   static getArticle(id: string) {
@@ -14,19 +14,19 @@ export class ArticleService {
       .then(AxiosContracts.responseContract(ArticleDtoSchema))
   }
 
-  static getArticles(config: { params: ArticlesParamsDto }) {
+  static getArticles(config: { params: articleTypesDto.ArticlesParamsDto }) {
     return axiosInstance
       .get('/articles', config)
       .then(AxiosContracts.pageResponseContract(ArticlesDtoSchema))
   }
 
-  static createArticleMutation(data: { createArticleDto: CreateArticleDto }) {
+  static createArticleMutation(data: { createArticleDto: articleTypesDto.CreateArticleDto }) {
     const createArticleDto = AxiosContracts.requestContract(
       CreateArticleDtoSchema,
       data.createArticleDto,
     )
     return axiosInstance
-      .post('/articles', { createArticleDto })
+      .post('/articles', createArticleDto)
       .then(AxiosContracts.responseContract(z.null()))
   }
 

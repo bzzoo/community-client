@@ -1,12 +1,11 @@
-import { CreateArticleModal } from '@/widgets/modal/create-article-modal.ui'
-
-
+import { CreateArticleModal } from '@/widgets/modal'
+import { ArticlesFeed } from '@/widgets/article-feed'
 
 export default function page() {
   return (
     <>
       <CreateArticleModal />
-      {/*<ArticlesFeed/>*/}
+      <ArticlesFeed/>
     </>
   )
 }

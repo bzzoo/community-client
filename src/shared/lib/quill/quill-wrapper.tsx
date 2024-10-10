@@ -5,59 +5,62 @@ import React, {
   useRef,
   forwardRef,
   useImperativeHandle,
-} from "react";
-import dynamic from "next/dynamic";
-import "quill/dist/quill.snow.css";
+} from 'react'
+import dynamic from 'next/dynamic'
+import 'quill/dist/quill.snow.css'
 
 type QuillWrapperProps = {
-  value: string;
-  onChange: (value: string) => void;
-  readOnly: boolean;
-  placeholder: string;
-  modules: any;
+  value: string
+  onChange: (value: string) => void
+  readOnly: boolean
+  placeholder: string
+  modules: any
 }
 
-export const DynamicQuillWrapper = dynamic(() => Promise.resolve(QuillWrapper), {
-  ssr: false,
-  loading: () => <div>...loading</div>,
-});
+export const DynamicQuillWrapper = dynamic(
+  () => Promise.resolve(QuillWrapper),
+  {
+    ssr: false,
+    loading: () => <div>...loading</div>,
+  },
+)
 
 const QuillWrapper = forwardRef<any, QuillWrapperProps>(
   ({ value, onChange, readOnly, placeholder, modules }, ref) => {
-    const quillRef = useRef<HTMLDivElement | null>(null);
-    const quillInstance = useRef<any>(null);
+    const quillRef = useRef<HTMLDivElement | null>(null)
+    const quillInstance = useRef<any>(null)
 
     useImperativeHandle(ref, () => ({
       getQuillInstance: () => quillInstance.current,
-    }));
+    }))
 
     useEffect(() => {
       const loadQuill = async () => {
-        if (typeof window !== "undefined") {
-          const Quill = (await import("quill")).default;
+        if (typeof window !== 'undefined') {
+          const Quill = (await import('quill')).default
 
           if (quillRef.current && !quillInstance.current) {
             quillInstance.current = new Quill(quillRef.current, {
-              theme: "snow",
+              theme: 'snow',
               readOnly: readOnly,
               placeholder: placeholder,
               modules: modules,
-            });
+            })
 
-            quillInstance.current.on("text-change", () => {
-              const editorContent = quillInstance.current.root.innerHTML;
-              onChange(editorContent);
-            });
+            quillInstance.current.on('text-change', () => {
+              const editorContent = quillInstance.current.root.innerHTML
+              onChange(editorContent)
+            })
           }
 
           if (quillInstance.current) {
-            quillInstance.current.root.innerHTML = value;
+            quillInstance.current.root.innerHTML = value
           }
         }
-      };
-      loadQuill();
-    }, []);
+      }
+      loadQuill()
+    }, [])
 
-    return <div ref={quillRef} />;
-  }
-);
+    return <div ref={quillRef} />
+  },
+)
