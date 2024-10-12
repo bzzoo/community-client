@@ -24,6 +24,7 @@ export const CommentSchema = z.object({
   }),
   createdAt: z.coerce.date().nullable(),
   updatedAt: z.coerce.date().nullable(),
+  upvoteCount: z.number().default(0),
   childCount: z.number(),
 })
 

@@ -7,6 +7,13 @@ import { CommentsParamsDto, CreateCommentDto } from './comment.types'
 import { AxiosContracts, axiosInstance } from '@/shared/lib/axios'
 
 export class CommentService {
+  static getComment(config:{commentId: number}){
+    const {commentId} = config
+    return axiosInstance
+      .get(`/v1/comments/${commentId}`)
+      .then(AxiosContracts.responseContract(CommentDtoSchema))
+  }
+
   static getCommentsInit(config: { articleId: number }) {
     console.log(config.articleId)
     return axiosInstance
