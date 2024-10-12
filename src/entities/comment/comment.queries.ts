@@ -1,24 +1,42 @@
 import { infiniteQueryOptions, queryOptions } from '@tanstack/react-query'
 import { CommentService } from '@/shared/api/comment'
 import { queryClient } from '@/shared/lib/react-query'
-import { transCommentsDtoToComments } from './comment.lib'
-import { Comments } from './comment.types'
+import { Comments, Comment } from './comment.types'
 import { FilterQuery, InfiniteComments } from '@/entities/comment'
+import { transCommentDtoToComment, transCommentsDtoToComments } from '@/entities/comment/comment.lib'
 
 export class CommentQueries {
   static readonly keys = {
+    root: ['comment'] as const,
+
+    singleComment: ['comment', 'single'] as const,
+
     articleComments: (articleId: number) =>
       ['comment', 'initial-load', articleId.toString()] as const,
 
-    comments: (articleId: number, parentId?: number) =>
-      parentId
-        ? ([
-            'comment',
-            'child',
-            articleId.toString(),
-            parentId.toString(),
-          ] as const)
-        : (['comment', 'parent', articleId.toString()] as const),
+    parentComments: (articleId: number) =>
+      ['comment', 'parent', 'infinite', articleId.toString()] as const,
+
+    childComments: (articleId: number, parentId: number) =>
+      [
+        'comment',
+        'child',
+        'infinite',
+        articleId.toString(),
+        parentId.toString(),
+      ] as const,
+  }
+
+  static commentQuery(commentId: number) {
+    return queryOptions({
+      queryKey:[...this.keys.root, commentId],
+      queryFn: async ({ signal }) => {
+        const res = await CommentService.getComment({commentId})
+        return transCommentDtoToComment(res)
+      },
+      initialData: () => this.getInitialData<Comment>(['comment', commentId.toString()]),
+      initialDataUpdatedAt: () => this.getQueryDataUpdateAt(['comment', commentId.toString()]),
+    })
   }
 
   static commentsQuery(articleId: number) {
@@ -29,7 +47,7 @@ export class CommentQueries {
           articleId,
         })
         const comments = transCommentsDtoToComments(response.content)
-        this.setCommentData(articleId, comments)
+        this.setCommentData(comments)
         return comments
       },
       initialData: () =>
@@ -43,8 +61,10 @@ export class CommentQueries {
   }
 
   static commentsInfiniteQuery(articleId: number, filter?: FilterQuery) {
-    const { size = 10, cursor = -1, depth = 1, parentId } = filter || {}
-    const queryKey = this.keys.comments(articleId, parentId)
+    const { size = 10, cursor = -1, depth, parentId } = filter || {}
+    const queryKey = parentId
+      ? this.keys.childComments(articleId, parentId)
+      : this.keys.parentComments(articleId)
 
     return infiniteQueryOptions({
       queryKey,
@@ -60,7 +80,7 @@ export class CommentQueries {
           },
         })
         const comments = transCommentsDtoToComments(response.content)
-        this.setCommentData(articleId, comments)
+        this.setCommentData(comments)
         return {
           content: comments,
           nextCursor: response.nextCursor,
@@ -84,15 +104,9 @@ export class CommentQueries {
     return queryClient.getQueryState(queryKey)?.dataUpdatedAt
   }
 
-  private static setCommentData(articleId: number, comments: Comments) {
-    const existingComments =
-      queryClient.getQueryData<Comments>(
-        this.keys.articleComments(articleId),
-      ) || []
-    const mergedComments = [...existingComments, ...comments]
-    queryClient.setQueryData(
-      this.keys.articleComments(articleId),
-      mergedComments,
-    )
+  private static setCommentData(comments: Comments) {
+    comments.forEach((comment) => {
+      queryClient.setQueryData([...this.keys.root, comment.id], comment)
+    })
   }
 }
