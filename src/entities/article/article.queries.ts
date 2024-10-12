@@ -17,23 +17,23 @@ export class ArticleQueries {
     root: ['article'] as const,
     rootById: ['article', 'by-id'] as const,
     rootInfinity: ['article', 'infinite-articles'] as const,
-    generalInfinity: [
-      'article',
-      'infinite-articles',
-      'general-articles',
-      'by-filter',
-    ] as const,
+    // generalInfinity: [
+    //   'article',
+    //   'infinite-articles',
+    //   'general-articles',
+    //   'by-filter',
+    // ] as const,
   }
 
-  static articleQuery(id: string) {
+  static articleQuery(id: number) {
     return queryOptions({
-      queryKey: [...this.keys.rootById, id],
+      queryKey: [...this.keys.root, id],
       queryFn: async ({ signal }) => {
-        const res = await ArticleService.getArticle(id)
+        const res = await ArticleService.getArticle(id.toString())
         return transArticleDtoToArticle(res)
       },
-      initialData: () => this.getInitialData<Article>(['article', id]),
-      initialDataUpdatedAt: () => this.getQueryDataUpdateAt(['article', id]),
+      initialData: () => this.getInitialData<Article>(['article', id.toString()]),
+      initialDataUpdatedAt: () => this.getQueryDataUpdateAt(['article', id.toString()]),
     })
   }
 

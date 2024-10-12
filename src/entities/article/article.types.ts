@@ -5,8 +5,9 @@ import {
   ArticlesSchema,
   FilterQuerySchema,
 } from './article.contracts'
+import { CursorResultType } from '@/shared/api/common/response.contracts'
 
 export type Article = z.infer<typeof ArticleSchema>
 export type Articles = z.infer<typeof ArticlesSchema>
 export type FilterQuery = z.infer<typeof FilterQuerySchema>
-export type InfiniteArticles = InfiniteData<Articles, number>
+export type InfiniteArticles = InfiniteData<CursorResultType<typeof ArticlesSchema>>;

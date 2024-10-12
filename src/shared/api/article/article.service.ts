@@ -4,8 +4,8 @@ import {
   ArticlesDtoSchema,
   CreateArticleDtoSchema,
 } from './article.contracts'
-import { articleTypesDto } from '@/shared/api/article'
 import { AxiosContracts, axiosInstance } from '@/shared/lib/axios'
+import { ArticlesParamsDto, CreateArticleDto } from './article.types'
 
 export class ArticleService {
   static getArticle(id: string) {
@@ -14,13 +14,13 @@ export class ArticleService {
       .then(AxiosContracts.responseContract(ArticleDtoSchema))
   }
 
-  static getArticles(config: { params: articleTypesDto.ArticlesParamsDto }) {
+  static getArticles(config: { params: ArticlesParamsDto }) {
     return axiosInstance
       .get('/articles', config)
       .then(AxiosContracts.pageResponseContract(ArticlesDtoSchema))
   }
 
-  static createArticleMutation(data: { createArticleDto: articleTypesDto.CreateArticleDto }) {
+  static createArticleMutation(data: { createArticleDto: CreateArticleDto }) {
     const createArticleDto = AxiosContracts.requestContract(
       CreateArticleDtoSchema,
       data.createArticleDto,
