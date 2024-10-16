@@ -24,6 +24,7 @@ export function transCreateCommentToComment(config: {
     createdAt: new Date(Date.now()),
     updatedAt: new Date(Date.now()),
     childCount: 0,
+    upvoteCount: 0
   }
 }
 

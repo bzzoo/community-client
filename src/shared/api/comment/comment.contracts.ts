@@ -17,6 +17,7 @@ const CommentDto = z.object({
   createdAt: z.coerce.date().nullable(),
   updatedAt: z.coerce.date().nullable(),
   childCount: z.number(),
+  upvoteCount: z.number().default(0)
 })
 
 export const CommentDtoSchema = CommentDto
