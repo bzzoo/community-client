@@ -53,8 +53,8 @@ export class ArticleQueries {
         const response = await ArticleService.getArticles({
           params: {
             tp: 'SHARE',
-            sz: size.toString(),
-            cr: cursor.toString(),
+            sz: size,
+            cr: cursor,
             ...(author && { author }),
             ...(tag && { tag }),
           },

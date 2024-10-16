@@ -32,8 +32,8 @@ export const ArticleDtoSchema = ArticleSummaryResponse
 export const ArticlesDtoSchema = z.array(ArticleSummaryResponse)
 
 export const PageParamsDtoSchema = z.object({
-  cr: z.string(),
-  sz: z.string(),
+  cr: z.number(),
+  sz: z.number(),
   tp: z.string(),
 })
 

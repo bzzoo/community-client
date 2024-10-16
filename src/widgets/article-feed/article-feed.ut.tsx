@@ -9,7 +9,7 @@ import { Article } from '@/entities/article/article.types'
 import { useState } from 'react'
 import UserIcon from '@/shared/ui/member-icon'
 import { BsChatSquareDots } from 'react-icons/bs'
-import { UpvoteArticleButton } from '@/features/article/upvote-article/upvote-article.ui'
+import { UpvoteArticleButton } from '@/features/article/upvote-article'
 import Link from 'next/link'
 
 export function ArticlesFeed() {
@@ -24,7 +24,6 @@ export function ArticlesFeed() {
   } = useSuspenseInfiniteQuery(articlesInfiniteQueryOptions)
 
   const isEmpty = isSuccess && !hasNextPage
-
   const canShowNextPageButton = hasNextPage && !isFetchingNextPage
   const canShowLoadingPageButton = hasNextPage && isFetchingNextPage
 
