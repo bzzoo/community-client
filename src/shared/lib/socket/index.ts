@@ -1,1 +1,1 @@
-export * from './stomp-client'
+export { useSocketStore } from './stomp.model'
