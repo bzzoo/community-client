@@ -106,9 +106,8 @@
 
 .ql-container.ql-snow {
     border: none !important;
-    background-color: #f2f4f6 !important;
+    /*background-color: #f2f4f6 !important;*/
     border-radius: 12px !important;
-    display: inline-block !important;
 }
 
 .quill > .ql-container > .ql-editor {

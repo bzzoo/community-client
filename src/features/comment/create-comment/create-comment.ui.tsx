@@ -25,11 +25,11 @@ export function CreateCommentForm({
   targetType: string
   onSubmit?: () => void
 }) {
-  const [toolbarId, setToolbarId] = useState<string | null>(null)
-
   useEffect(() => {
     setToolbarId(Math.random().toString(36).substr(2, 9))
   }, [])
+
+  const [toolbarId, setToolbarId] = useState<string | null>(null)
   const {
     handleSubmit,
     setError,
