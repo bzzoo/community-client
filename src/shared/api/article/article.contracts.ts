@@ -32,14 +32,14 @@ export const ArticleDtoSchema = ArticleSummaryResponse
 export const ArticlesDtoSchema = z.array(ArticleSummaryResponse)
 
 export const PageParamsDtoSchema = z.object({
-  cr: z.number(),
-  sz: z.number(),
+  cr: z.number().nullable(),
+  sz: z.number().nullable(),
   tp: z.string(),
 })
 
 export const FilterParamDtoSchema = z.object({
   tag: z.string().optional(),
-  author: z.string().optional(),
+  author: z.number().optional(),
   pop: z.boolean().optional(),
 })
 

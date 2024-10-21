@@ -3,6 +3,7 @@ import { z, ZodType, ZodTypeAny } from 'zod'
 import { AxiosValidationError } from './axios-validator-error'
 import {
   ApiResponseSchema,
+  ApiResponseType,
   CursorResultType,
   PaginatedApiResponseSchema,
 } from '@/shared/api/common/response.contracts'
@@ -28,7 +29,7 @@ export class AxiosContracts {
 
   static pageResponseContract<Data extends ZodTypeAny>(schema: Data) {
     return (response: AxiosResponse<unknown>): CursorResultType<Data> => {
-      const pagedSchema = PaginatedApiResponseSchema(schema);
+      const pagedSchema = PaginatedApiResponseSchema(schema)
       const validation = pagedSchema.safeParse(response.data)
       console.log(response.data)
       if (!validation.success) {

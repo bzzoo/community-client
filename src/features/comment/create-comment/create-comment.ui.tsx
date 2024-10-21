@@ -116,7 +116,10 @@ export function CreateCommentForm({
 
 function CommentToolBar({ toolbarId }: { toolbarId: string | null }) {
   return (
-    <div id={toolbarId!!} style={{ padding: 0, height: '42px' }}>
+    <div
+      id={toolbarId!!}
+      style={{ padding: 0, height: '42px' }}
+    >
       <button className="ql-code-block" />
       <button className="ql-image" />
     </div>

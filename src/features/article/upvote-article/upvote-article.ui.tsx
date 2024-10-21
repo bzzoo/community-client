@@ -36,4 +36,3 @@ function upvote(article: articleTypes.Article): articleTypes.Article {
     upvoteCount: article.upvoteCount + 1,
   }
 }
-

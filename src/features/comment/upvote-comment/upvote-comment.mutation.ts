@@ -58,8 +58,8 @@ export function useUpvoteCommentMutation(
 
       queryClient.setQueryData(
         CommentQueries.commentQuery(comment.id).queryKey,
-        comment
-      );
+        comment,
+      )
 
       queryClient.setQueriesData(
         {
@@ -110,7 +110,7 @@ export function useUpvoteCommentMutation(
     onSettled: async (data, error, variables, context) => {
       // await Promise.all([
       //   queryClient.invalidateQueries({
-      //     queryKey: CommentQueries.keys.root,
+      //     queryKey: ProfileQueries.keys.root,
       //   }),
       //   onSettled?.(data, error, variables, context),
       // ])

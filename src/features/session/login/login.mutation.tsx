@@ -28,8 +28,7 @@ export function useLoginMutation(
   return useMutation({
     mutationKey: ['session', 'login-user', ...mutationKey],
 
-    mutationFn: async () =>
-      AuthService.currentMemberQuery(),
+    mutationFn: async () => AuthService.currentMemberQuery(),
 
     onMutate,
 

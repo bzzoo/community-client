@@ -39,4 +39,3 @@ function upvote(comment: commentTypes.Comment): commentTypes.Comment {
     upvoteCount: comment.upvoteCount + 1,
   }
 }
-

@@ -5,8 +5,7 @@ export default function page() {
   return (
     <>
       <CreateArticleModal />
-      <ArticlesFeed/>
+      <ArticlesFeed />
     </>
   )
 }
-

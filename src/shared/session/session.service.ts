@@ -110,7 +110,7 @@ export class PermissionService {
     session?: Session | null
   }): keyof SessionPermission {
     const { context, session = useSessionStore.getState().session } =
-    config || {}
+      config || {}
 
     if (!session) return 'guest'
     if (!context) return 'user'

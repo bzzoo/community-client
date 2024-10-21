@@ -1,3 +1,5 @@
+'use client'
+
 import {
   DefaultError,
   UseMutationOptions,
@@ -35,52 +37,120 @@ export function useCreateCommentMutation(
       return CommentService.createCommentMutation(createCommentDto)
     },
 
-    onMutate: async (variables) => {
-      const { articleId } = variables
-      await Promise.all([
-        queryClient.cancelQueries({
-          queryKey: CommentQueries.keys.articleComments(articleId),
-        }),
-        onMutate?.(variables),
-      ])
+    onMutate: async (newComment) => {
+      const { articleId, parentId } = newComment
 
-      const previousComments = queryClient.getQueryData(
-        CommentQueries.commentsQuery(articleId).queryKey,
-      )
+      await queryClient.cancelQueries({ queryKey: CommentQueries.keys.root })
 
-      const updatedComments = [...Array.from(previousComments || []), variables]
+      const previousData = {
+        comments: queryClient.getQueryData<commentTypes.InfiniteComments>(
+          CommentQueries.keys.parentComments(articleId),
+        ),
+        childComments: parentId
+          ? queryClient.getQueryData<commentTypes.InfiniteComments>(
+              CommentQueries.keys.childComments(articleId, parentId),
+            )
+          : undefined,
+        parentComment: parentId
+          ? queryClient.getQueryData<commentTypes.Comment>([
+              ...CommentQueries.keys.root,
+              parentId,
+            ])
+          : undefined,
+      }
 
-      queryClient.setQueryData(
-        CommentQueries.commentsQuery(articleId).queryKey,
-        updatedComments,
-      )
+      if (parentId) {
+        queryClient.setQueryData(
+          CommentQueries.keys.childComments(articleId, parentId),
+          (old: commentTypes.InfiniteComments | undefined) => {
+            if (!old)
+              return { pages: [{ content: [newComment] }], pageParams: [] }
+            return {
+              ...old,
+              pages: [
+                {
+                  ...old.pages[0],
+                  content: [...old.pages[0].content, newComment],
+                },
+                ...old.pages.slice(1),
+              ],
+            }
+          },
+        )
 
-      await onMutate?.(variables)
+        // Update parent comment's childCount
+        queryClient.setQueryData(
+          [...CommentQueries.keys.root, parentId],
+          (old: commentTypes.Comment | undefined) => {
+            if (!old) return old
+            return { ...old, childCount: (old.childCount || 0) + 1 }
+          },
+        )
+      } else {
+        // Update parent comments
+        queryClient.setQueryData(
+          CommentQueries.keys.parentComments(articleId),
+          (old: commentTypes.InfiniteComments | undefined) => {
+            if (!old)
+              return { pages: [{ content: [newComment] }], pageParams: [] }
+            return {
+              ...old,
+              pages: [
+                {
+                  ...old.pages[0],
+                  content: [...old.pages[0].content, newComment],
+                },
+                ...old.pages.slice(1),
+              ],
+            }
+          },
+        )
+      }
 
-      return { previousComments }
+      await onMutate?.(newComment)
+
+      return previousData
     },
 
-    onSuccess,
+    onError: (err, newComment, context) => {
+      const { articleId, parentId } = newComment
+      if (context) {
+        queryClient.setQueryData(
+          CommentQueries.keys.parentComments(articleId),
+          context.comments,
+        )
+        if (parentId) {
+          queryClient.setQueryData(
+            CommentQueries.keys.childComments(articleId, parentId),
+            context.childComments,
+          )
+          queryClient.setQueryData(
+            [...CommentQueries.keys.root, parentId],
+            context.parentComment,
+          )
+        }
+      }
+      onError?.(err, newComment, context)
+    },
 
-    onError: async (error, variables, context) => {
-      const { articleId } = variables
-      const { previousComments } = context || {}
-
-      queryClient.setQueryData(
-        CommentQueries.commentsQuery(articleId).queryKey,
-        previousComments,
-      )
-
-      await onError?.(error, variables, context)
+    onSuccess: async (data, variables, context) => {
+      await onSuccess?.(data, variables, context)
     },
 
     onSettled: async (data, error, variables, context) => {
-      await Promise.all([
-        queryClient.invalidateQueries({
-          queryKey: CommentQueries.keys.articleComments(variables.articleId),
-        }),
-        onSettled?.(data, error, variables, context),
-      ])
+      const { articleId, parentId } = variables
+      await queryClient.invalidateQueries({
+        queryKey: CommentQueries.keys.parentComments(articleId),
+      })
+      if (parentId) {
+        await queryClient.invalidateQueries({
+          queryKey: CommentQueries.keys.childComments(articleId, parentId),
+        })
+        await queryClient.invalidateQueries({
+          queryKey: [...CommentQueries.keys.root, parentId],
+        })
+      }
+      await onSettled?.(data, error, variables, context)
     },
   })
 }

@@ -24,8 +24,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/shared/ui/dropdown-menu'
-import { FaBell } from "react-icons/fa6";
-import { IoChatbubbleSharp } from "react-icons/io5";
+import { FaBell } from 'react-icons/fa6'
+import { IoChatbubbleSharp } from 'react-icons/io5'
 
 export function Header() {
   const { session } = useSessionStore.use
@@ -62,15 +62,25 @@ function GuestSection() {
 function MemberSection() {
   return (
     <div className="flex gap-6 items-center">
-      <IoChatbubbleSharp size={24} className="text-gray-400" />
-      <FaBell size={24} className="text-gray-400" />
+      <IoChatbubbleSharp
+        size={24}
+        className="text-gray-400"
+      />
+      <FaBell
+        size={24}
+        className="text-gray-400"
+      />
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button className="rounded-full w-11 h-11">
             <MemberIcon />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-56" side={'bottom'} align={'end'}>
+        <DropdownMenuContent
+          className="w-56"
+          side={'bottom'}
+          align={'end'}
+        >
           <DropdownMenuLabel>Appearance</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuItem>Activity Bar</DropdownMenuItem>

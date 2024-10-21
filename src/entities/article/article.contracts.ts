@@ -1,10 +1,10 @@
 import { z } from 'zod'
 
 export const FilterQuerySchema = z.object({
-  cursor: z.number().min(0).default(0),
-  size: z.number().min(1).default(20),
+  cursor: z.number().min(0).nullable(),
+  size: z.number().min(1).nullable(),
   tag: z.string().nullable(),
-  author: z.string().nullable(),
+  authorId: z.number().nullable(),
 })
 
 export const ArticleSchema = z.object({
@@ -25,7 +25,7 @@ export const ArticleSchema = z.object({
     z.object({
       id: z.number(),
       name: z.string(),
-    })
+    }),
   ),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),

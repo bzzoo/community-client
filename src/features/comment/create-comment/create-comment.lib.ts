@@ -10,9 +10,10 @@ export function transCreateCommentToComment(config: {
   return {
     id: Infinity,
     articleId: createComment.articleId,
-    parentId: createComment.targetId,
+    parentId:
+      createComment.targetType === 'COMMENT' ? createComment.targetId : null,
     targetType: createComment.targetType,
-    status: "STEADY",
+    status: 'STEADY',
     author: {
       id: -1,
       nickname: 'TemporaryNickname',
@@ -24,7 +25,7 @@ export function transCreateCommentToComment(config: {
     createdAt: new Date(Date.now()),
     updatedAt: new Date(Date.now()),
     childCount: 0,
-    upvoteCount: 0
+    upvoteCount: 0,
   }
 }
 

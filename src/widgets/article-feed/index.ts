@@ -1,1 +1,1 @@
-export { ArticlesFeed } from './article-feed.ut'
+export { ArticlesFeed } from './article-feed.ui'

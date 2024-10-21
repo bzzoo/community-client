@@ -17,33 +17,28 @@ export class ArticleQueries {
     root: ['article'] as const,
     rootById: ['article', 'by-id'] as const,
     rootInfinity: ['article', 'infinite-articles'] as const,
-    // generalInfinity: [
-    //   'article',
-    //   'infinite-articles',
-    //   'general-articles',
-    //   'by-filter',
-    // ] as const,
+    profileByMember: ['article', 'profile'],
   }
 
   static articleQuery(id: number) {
+    const queryKey = [...this.keys.root, id] as string[]
     return queryOptions({
       queryKey: [...this.keys.root, id],
-      queryFn: async ({ signal }) => {
+      queryFn: async () => {
         const res = await ArticleService.getArticle(id.toString())
         return transArticleDtoToArticle(res)
       },
-      initialData: () => this.getInitialData<Article>(['article', id.toString()]),
-      initialDataUpdatedAt: () => this.getQueryDataUpdateAt(['article', id.toString()]),
+      initialData: () => this.getInitialData<Article>(queryKey),
+      initialDataUpdatedAt: () => this.getQueryDataUpdateAt(queryKey),
     })
   }
 
-  static articlesInfiniteQuery(filter?: FilterQuery) {
-    const { size = 10, cursor = -1, author, tag } = filter || {}
+  static articlesInfiniteQuery(filter?: Partial<FilterQuery>) {
+    const { size = 10, cursor = -1, authorId, tag } = filter || {}
     const queryKey = [
       ...this.keys.rootInfinity,
-      'general-articles',
       'by-filter',
-      { author },
+      { authorId },
       { tag },
     ].filter(Boolean) as string[]
 
@@ -55,7 +50,7 @@ export class ArticleQueries {
             tp: 'SHARE',
             sz: size,
             cr: cursor,
-            ...(author && { author }),
+            ...(authorId && { authorId }),
             ...(tag && { tag }),
           },
         })

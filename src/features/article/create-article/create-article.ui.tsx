@@ -7,7 +7,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/shared/ui/select'
-import { useForm, UseFormSetValue, UseFormWatch } from 'react-hook-form'
+import { useForm, UseFormSetValue } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Label } from '@/shared/ui/label'
 import { Textarea } from '@/shared/ui/textarea'
@@ -18,10 +18,7 @@ import { CreateArticleSchema, CreateArticle } from './create-article.contracts'
 import { CreateArticleEditor } from '@/shared/lib/quill'
 import { useCreateArticleMutation } from './create-article.mutation'
 import { useRouter } from 'next/navigation'
-import {
-  transCreateArticleToArticle,
-  transCreateArticleToCreateArticleDto,
-} from '@/features/article/create-article/create-artice.lib'
+import { transCreateArticleToArticle } from '@/features/article/create-article/create-artice.lib'
 
 export const CreateArticleForm = () => {
   const router = useRouter()
@@ -72,13 +69,22 @@ export const CreateArticleForm = () => {
 
       <div className="flex flex-col justify-center w-full">
         <div className="mb-20">
-          <TitleInput setValue={setValue} title={formData.title} />
-          <CreateArticleEditor setValue={setValue} watch={watch} />
+          <TitleInput
+            setValue={setValue}
+            title={formData.title}
+          />
+          <CreateArticleEditor
+            setValue={setValue}
+            watch={watch}
+          />
         </div>
       </div>
 
       <div className="flex flex-col gap-4 p-4 w-full">
-        <SelectArticleType category={formData.type} setValue={setValue} />
+        <SelectArticleType
+          category={formData.type}
+          setValue={setValue}
+        />
         <AddArticleKeyword
           setValue={setValue}
           selectedKeywords={formData.keywords}
@@ -178,7 +184,10 @@ function AddArticleKeyword({
 
       <ul className="flex flex-wrap gap-4 mt-2">
         {selectedKeywords.map((keyword) => (
-          <Badge key={keyword} onClick={() => removeKeyword(keyword)}>
+          <Badge
+            key={keyword}
+            onClick={() => removeKeyword(keyword)}
+          >
             {keyword}
           </Badge>
         ))}
@@ -201,12 +210,18 @@ function CreateArticleToolbar() {
       id="toolbar"
       className="flex justify-center items-center gap-8 h-[56px] w-full"
     >
-      <button className="ql-bold hover:bg-blue-500 " />
+      <button className="ql-bold hover:bg-blue-500" />
       <button className="ql-underline hover:bg-blue-500" />
       <button className="ql-blockquote hover:bg-blue-500" />
       <button className="ql-code-block hover:bg-blue-500" />
-      <button className="ql-list  hover:bg-blue-500" value="ordered" />
-      <button className="ql-list hover:bg-blue-500" value="bullet" />
+      <button
+        className="ql-list  hover:bg-blue-500"
+        value="ordered"
+      />
+      <button
+        className="ql-list hover:bg-blue-500"
+        value="bullet"
+      />
       <button className="ql-image hover:bg-blue-500 hover:text-white" />
     </div>
   )

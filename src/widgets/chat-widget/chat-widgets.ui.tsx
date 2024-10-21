@@ -183,9 +183,15 @@ function ChatMessageList({
 
         {reversedMessages.map((message: chatTypes.ChatMessage) =>
           message.sender.id === session?.id ? (
-            <MyMessage key={message.id} message={message} />
+            <MyMessage
+              key={message.id}
+              message={message}
+            />
           ) : (
-            <YourMessage key={message.id} message={message} />
+            <YourMessage
+              key={message.id}
+              message={message}
+            />
           ),
         )}
       </div>

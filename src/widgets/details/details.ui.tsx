@@ -8,8 +8,6 @@ import {
 import { ArticleQueries } from '@/entities/article'
 import { CommentQueries } from '@/entities/comment'
 import { CreateCommentForm } from '@/features/comment/create-comment'
-import UserIcon from '@/shared/ui/member-icon'
-import Link from 'next/link'
 import { commentTypes } from '@/entities/comment'
 import { articleTypes } from '@/entities/article'
 import { useState, useEffect } from 'react'
@@ -17,6 +15,8 @@ import { Button } from '@/shared/ui/button'
 import { IoIosArrowUp, IoIosArrowDown } from 'react-icons/io'
 import { ReadOnlyEditor } from '@/shared/lib/quill'
 import { UpvoteCommentButton } from '@/features/comment/upvote-comment'
+import Link from 'next/link'
+import UserIcon from '@/shared/ui/member-icon'
 
 export function Details({ id }: { id: number }) {
   const { data: article } = useSuspenseQuery(ArticleQueries.articleQuery(id))
@@ -37,7 +37,6 @@ export function Details({ id }: { id: number }) {
   return (
     <div className="inset-0 overflow-auto shadow-[0px_4px_8px_-2px_rgba(0,0,0,0.10),_0px_0px_0px_1px_rgba(0,0,0,0.03)] relative md:rounded-[20px]">
       <div className="border-b mt-10" />
-      {/* 헤더 */}
       <div className="flex flex-col border-b px-3 py-2">
         <div className="my-4 cursor-pointer px-6">
           <div className="flex items-center gap-2">
@@ -45,7 +44,7 @@ export function Details({ id }: { id: number }) {
             {author.nickname}
           </div>
         </div>
-        {/* 본문 */}
+
         <div className="px-6 text-[15px] leading-6">
           <h1 className="ml-4 text-xl">{contents.title}</h1>
           <ReadOnlyEditor content={contents.body} />
@@ -57,14 +56,16 @@ export function Details({ id }: { id: number }) {
         <Button>{article?.upvoteCount ?? 0}</Button>
         <Button>{article?.viewCount ?? 0}</Button>
       </div>
-
       <div className="px-6 pb-6 mt-4">
         <CreateCommentForm
           articleId={article.id}
           targetId={article.id}
           targetType={article.type}
         />
-        <CommentList initLoadComments={comments} article={article} />
+        <CommentList
+          initLoadComments={comments}
+          article={article}
+        />
         {hasMoreParentComments && (
           <Button onClick={() => fetchNextParentComments()}>
             {isFetchingMoreParentComments
@@ -128,7 +129,10 @@ function CommentList({
               </div>
             )}
             {openComments[parent.id] && loadedComments[parent.id] && (
-              <ChildCommentList parentId={parent.id} article={article} />
+              <ChildCommentList
+                parentId={parent.id}
+                article={article}
+              />
             )}
           </div>
         ))}
@@ -143,8 +147,6 @@ function ChildCommentList({
   parentId: number
   article: articleTypes.Article
 }) {
-  const [childComments, setChildComments] = useState<commentTypes.Comments>([])
-  console.log(article)
   const commentsInfiniteQueryOptions = CommentQueries.commentsInfiniteQuery(
     article.id,
     {
@@ -163,19 +165,16 @@ function ChildCommentList({
     isFetchingNextPage,
   } = useInfiniteQuery(commentsInfiniteQueryOptions)
 
-  useEffect(() => {
-    if (childCommentsData) {
-      const newComments = childCommentsData.pages.flatMap(
-        (page) => page.content,
-      )
-      setChildComments((prevComments) => [...prevComments, ...newComments])
-    }
-  }, [childCommentsData])
+  const childComments =
+    childCommentsData?.pages.flatMap((page) => page.content) || []
 
   return (
     <>
       {childComments.map((child: commentTypes.Comment) => (
-        <div key={child.id} className="ml-12">
+        <div
+          key={child.id}
+          className="ml-12"
+        >
           <CommentMeta
             comment={child}
             article={article}
@@ -225,7 +224,6 @@ function CommentMeta({
             </div>
           </div>
         </div>
-
         <div className="ml-6">
           <ReadOnlyEditor content={comment.body} />
           <div className="flex items-center gap-3">
@@ -239,7 +237,6 @@ function CommentMeta({
                 articleId={article.id}
                 targetId={targetId}
                 targetType={'COMMENT'}
-                onSubmit={toggleReplyForm}
               />
             </div>
           )}
@@ -251,7 +248,10 @@ function CommentMeta({
 
 function ReplyButton({ onClick }: { onClick: () => void }) {
   return (
-    <div className="text-sm" onClick={onClick}>
+    <div
+      className="text-sm"
+      onClick={onClick}
+    >
       답글
     </div>
   )

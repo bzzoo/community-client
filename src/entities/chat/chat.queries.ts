@@ -37,8 +37,9 @@ export class ChatQueries {
   }
 
   static chatMessagesInfiniteQuery(roomId: number) {
+    const queryKey = ['chatMessages', roomId.toString()]
     return infiniteQueryOptions({
-      queryKey: ['chatMessages', roomId.toString()],
+      queryKey,
       queryFn: async ({ pageParam = -1 }) => {
         const response = await ChatService.getChatMessages({
           roomId: roomId,
@@ -47,7 +48,9 @@ export class ChatQueries {
             cr: pageParam as number,
           },
         })
-        const chatMessages = transChatMessagesDtoToChatMessages(response.content)
+        const chatMessages = transChatMessagesDtoToChatMessages(
+          response.content,
+        )
         return {
           ...response,
           content: chatMessages,
@@ -57,10 +60,8 @@ export class ChatQueries {
       getNextPageParam: (lastPage) =>
         lastPage.isLast ? null : lastPage.nextCursor,
       // @ts-expect-error FIXME: https://github.com/TanStack/query/issues/7341
-      initialData: () =>
-        this.getInitialData<InfiniteMessages>(['chatMessages', roomId.toString()]),
-      initialDataUpdatedAt: () =>
-        this.getQueryDataUpdateAt(['chatMessages', roomId.toString()]),
+      initialData: () => this.getInitialData<InfiniteMessages>(queryKey),
+      initialDataUpdatedAt: () => this.getQueryDataUpdateAt(queryKey),
     })
   }
 

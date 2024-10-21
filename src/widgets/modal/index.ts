@@ -1,1 +1,1 @@
-export {CreateArticleModal} from './create-article-modal.ui'
+export { CreateArticleModal } from './create-article-modal.ui'

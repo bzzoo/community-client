@@ -9,7 +9,7 @@ export function transCreateArticleToCreateArticleDto(
     title: article.contents.title,
     body: article.contents.body,
     type: article.type,
-    keywords: article.keywords.map((keyword) => keyword.name)
+    keywords: article.keywords.map((keyword) => keyword.name),
   }
 }
 
@@ -40,5 +40,5 @@ export function transCreateArticleToArticle(config: {
     viewCount: 0,
     commentCount: 0,
     upvoteCount: 0,
-  };
+  }
 }

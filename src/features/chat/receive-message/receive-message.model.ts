@@ -26,10 +26,7 @@ export function updateChatMessagesCache(
   return true
 }
 
-export function handleReceivedMessage(
-  message: any,
-  chatRoomId: number,
-) {
+export function handleReceivedMessage(message: any, chatRoomId: number) {
   try {
     const receivedMessage = JSON.parse(message.body)
     return updateChatMessagesCache(receivedMessage, chatRoomId)

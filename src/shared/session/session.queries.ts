@@ -16,8 +16,7 @@ export class SessionQueries {
       initialData: () =>
         queryClient.getQueryData<Session>(['session', 'current-auth']),
       initialDataUpdatedAt: () =>
-        queryClient.getQueryState(['session', 'current-auth'])
-          ?.dataUpdatedAt,
+        queryClient.getQueryState(['session', 'current-auth'])?.dataUpdatedAt,
     })
   }
 }

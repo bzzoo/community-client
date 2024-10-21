@@ -11,7 +11,7 @@ export class AxiosValidationError<T = unknown, D = any> extends AxiosError {
     readonly errors?: ZodIssue[],
   ) {
     super(
-      'The provided data does not meet the required criteria.',
+      '유효성 에러',
       AxiosValidationError.ERR_BAD_VALIDATION,
       config,
       request,
